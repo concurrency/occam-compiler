@@ -1,0 +1,110 @@
+import os.path
+
+local = Environment(
+#        CC = 'clang',
+#        LDMODULE = 'lld',
+#        RANLIB = 'llvm-ranlib-6.0',
+#        AR = 'llvm-ar-6.0',
+#
+#        CCFLAGS='-m32',
+#        LDMODULEFLAGS='-m32',
+#        CPPPATH = 'include',
+        )
+
+
+# Create a local configuration context; we will
+# close it before the end of this script.
+conf = local.Configure(config_h = 'config.h', help = False)
+
+conf.Define('HOST_OS_IS_UNIX', 1, 'Set for compilation to large targets.')
+conf.Define('STDC_HEADERS', 1, "We have standard C.")
+conf.Define('TARGET_OS_IS_UNIX', 
+        1, 'Set if compiling ilibr & tcofflib under a UNIX.')
+conf.Define('COMPILER_IS_GCC', 
+        1, 'Set if compiling ilibr & tcofflib with GCC.')
+conf.Define('TARGET_CPU_IS_I386', 
+        1, 'Set if compiling for an x86 platform.')
+conf.Define('OC', 
+        1, 'Unconditional')
+conf.Define('OCCAM2_5', 
+        1, 'Unconditional')
+conf.Define('TARGET_CANONICAL', 
+        '"i386"', 'Target CPU')
+conf.Define('CODE_GEN_KROC_ASM', 
+        1, 'Define to target KROC ETC.')
+conf.Define('USER_DEFINED_OPERATORS', 
+        1, 'To enable user-defined operators.')
+conf.Define('MOBILES', 
+        1, 'Default enabled.')
+#conf.Define('DEBUG', 0, 'Default disabled.')
+#conf.Define('DEBUG_NEXTSYMB', 0, 'Default disabled.')
+conf.Define('PROCESS_PRIORITY', 
+        1, 'Default enabled.')
+conf.Define('CAN_USE_INLINE', 
+        1, 'Depends on compiler... GCC OK?')
+conf.Define('INITIAL_DECL', 
+        1, 'Default enabled.')
+conf.Define('VERSION', '"1.4.0"', 'This has not changed for 10 years... why start now?')
+
+conf.CheckTypeSize('signed int')
+
+# tcofflib wants 'stdlib.h'
+conf.CheckCHeader('stdlib.h')
+conf.CheckCHeader('stdarg.h')
+conf.CheckCHeader('malloc.h')
+
+# Finish the configuration section.
+local = conf.Finish()
+
+# Append the appropriate CCFLAGS for compiling 
+# mkoccdeps; in particular, make known that we have
+# a 'config.h' file.
+local.Append(CPPDEFINES = 'HAVE_CONFIG_H')
+
+def Files(string, path=None):
+    '''Helper which like split takes a sring and splits it. 
+    It is however posible to set a path to be prepended to each file
+    in the list, which makes it easier to define a list of files which
+    all live in a different directory.'''
+    lst = Split(string)
+    if path: return [os.path.join(path, f) for f in lst]
+    return lst
+
+
+fnilib_srcs = Files('fni.c popen.c', path='fnilib')
+# stage07 = local.Library(
+#         'fnilib/fnilib', 
+#         fnilib_srcs,
+#         CPPPATH = ['.', 'include'])
+
+tcofflib_srcs = Files('''
+        alloc1.c alloc2.c disassem.c hexdump.c 
+        command1.c command2.c command3.c command4.c command6.c 
+        com.c error.c 
+        strutil3.c strutil4.c strutil5.c strutil6.c strutil7.c
+        tcoff_io.c lff_io.c
+        ''', path='tcofflib')
+
+stage10 = local.Library(
+        'tcofflib/tcofflib', 
+        tcofflib_srcs + fnilib_srcs,
+        CPPPATH = ['.', 'include', 'tcofflib', 'fnilib'],
+        #LIBS=['fnilib']
+        ) 
+
+stage11_srcs = Files("arg.c ilibr.c", path=".")
+stage11 = local.Object(["arg.c", "ilibr.c"],
+        CPPPATH = ['.', 'include'])
+
+ilibr = local.Program(
+        target = 'ilibr',  
+        source = [
+                stage10, 
+                stage11,
+                #stage07
+                ],
+        LIBS = ['tcofflib', 'fnilib'],
+        CPPPATH = ['.', 'include'],
+        LIBPATH = ['tcofflib', 'fnilib']
+        )
+

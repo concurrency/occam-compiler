@@ -1,7 +1,5 @@
 import os.path
 
-# Clone the environment so we don"t make it 
-# all dirty. ("Dirty, dirty.")
 local = Environment(
         CC = 'clang',
         CPPPATH = 'include',
@@ -15,7 +13,7 @@ conf = local.Configure(config_h = 'config.h', help = False)
 conf.Define('HOST_OS_IS_UNIX', 1, 'Set for compilation to large targets.')
 conf.Define('TARGET_OS_IS_UNIX', 
         1, 'Set if compiling ilibr & tcofflib under a UNIX.')
-conf.Define('COMPILER_IS_GCC', 
+conf.Define('COMPILER_IS_GCC',  
         1, 'Set if compiling ilibr & tcofflib with GCC.')
 conf.Define('TARGET_CPU_IS_I386', 
         1, 'Set if compiling for an x86 platform.')
@@ -164,7 +162,3 @@ occ21 = local.Program(
         CPPPATH = ['.', 'include'],
         LIBPATH = ['arglib', 'extlib', 'fnilib', 'maplib', 'suplib', 'tcofflib']
         )
-
-
-#env['OCC21']        = occ21
-# env.AppendENVPath('SKROCPATH', os.path.dirname(occ21[0].abspath))
