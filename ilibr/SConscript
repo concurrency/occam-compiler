@@ -1,7 +1,7 @@
 import os.path
 
 local = Environment(
-#        CC = 'clang',
+        CC = 'clang',
 #        LDMODULE = 'lld',
 #        RANLIB = 'llvm-ranlib-6.0',
 #        AR = 'llvm-ar-6.0',

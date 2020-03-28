@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <setjmp.h>
+#include <string.h>
 #include "toolkit.h"
 #include "fnilib.h"
 #include "popen_re.h"

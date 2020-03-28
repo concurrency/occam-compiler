@@ -9,7 +9,7 @@ local = Environment(
 # Create a local configuration context; we will
 # close it before the end of this script.
 conf = local.Configure(config_h = 'config.h', help = False)
-
+conf.Define('STDC_HEADERS', 1, "We have standard C.")
 conf.Define('HOST_OS_IS_UNIX', 1, 'Set for compilation to large targets.')
 conf.Define('TARGET_OS_IS_UNIX', 
         1, 'Set if compiling ilibr & tcofflib under a UNIX.')
