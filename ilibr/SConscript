@@ -1,21 +1,22 @@
 import os.path
+Import("env")
 
-local = Environment(
-        CC = 'clang',
-        CCFLAGS='-m32',
-        LINKFLAGS='-m32',
-        )
-
+# local = Environment(
+#         CC = 'clang',
+#         CCFLAGS='-m32',
+#         LINKFLAGS='-m32',
+#         )
 #        LDMODULE = 'lld',
 #        RANLIB = 'llvm-ranlib-6.0',
 #        AR = 'llvm-ar-6.0',
-#
+
+local = env.Clone()
 
 # Create a local configuration context; we will
 # close it before the end of this script.
 conf = local.Configure(config_h = 'config.h', help = False)
 
-print(local["PLATFORM"])
+print("PLATFORM: ", local["PLATFORM"])
 
 if local["PLATFORM"] == "darwin":
         conf.Define("HOST_IS_DARWIN", 1, "Set for Mac targets")
@@ -80,10 +81,10 @@ def Files(string, path=None):
 
 
 fnilib_srcs = Files('fni.c popen.c', path='fnilib')
-# stage07 = local.Library(
-#         'fnilib/fnilib', 
-#         fnilib_srcs,
-#         CPPPATH = ['.', 'include'])
+stage07 = local.Library(
+         'fnilib/fnilib', 
+          fnilib_srcs,
+          CPPPATH = ['.', 'include'])
 
 tcofflib_srcs = Files('''
         alloc1.c alloc2.c disassem.c hexdump.c 
@@ -109,7 +110,7 @@ ilibr = local.Program(
         source = [
                 stage10, 
                 stage11,
-                #stage07
+                stage07
                 ],
         LIBS = ['tcofflib', 'fnilib'],
         CPPPATH = ['.', 'include'],
