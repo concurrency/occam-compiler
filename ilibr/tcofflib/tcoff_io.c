@@ -362,7 +362,9 @@ va_dcl
 #else
   va_start (ap);
 #endif
-  rec_len = _tcoff_record_length (ap, va_alist);
+  /* 20200328 MCJ */
+  /* Fixing cast warning. */
+  rec_len = _tcoff_record_length (ap, (char *)va_alist);
   va_end (ap);
 
   tcoff_putl (fs, rec_len);
@@ -371,7 +373,9 @@ va_dcl
 #else
   va_start (ap);
 #endif
-  _tcoff_print_rec (fs, ap, va_alist);
+  /* 20200328 MCJ */
+  /* Fixing cast warning. */
+  _tcoff_print_rec (fs, ap, (char *)va_alist);
   va_end (ap);
 }
 /*}}}*/

@@ -54,7 +54,7 @@ static char host_switch_char (void)
 
 #if defined(HOST_OS_IS_MSDOS) || defined(HOST_OS_IS_VMS)
   prefix_character = '/';
-#elif defined(HOST_OS_IS_HELIOS) || defined(HOST_OS_IS_UNIX)		/* SUN_OS evaporated */
+#elif defined(HOST_OS_IS_HELIOS) || defined(HOST_OS_IS_UNIX) || defined(HOST_IS_DARWIN)	/* SUN_OS evaporated */
   prefix_character = '-';
 #elif defined(HOST_OS_IS_SERVER)
   {

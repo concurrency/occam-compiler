@@ -29,7 +29,9 @@
 #include <stdio.h>
 #ifdef __STDC__
 #include <stdlib.h>
+#ifndef HOST_IS_DARWIN
 #include <malloc.h>
+#endif
 #endif
 #include "toolkit.h"
 

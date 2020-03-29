@@ -2,22 +2,30 @@ import os.path
 
 local = Environment(
         CC = 'clang',
+        CCFLAGS='-m32',
+        LINKFLAGS='-m32',
+        )
+
 #        LDMODULE = 'lld',
 #        RANLIB = 'llvm-ranlib-6.0',
 #        AR = 'llvm-ar-6.0',
 #
-#        CCFLAGS='-m32',
-#        LDMODULEFLAGS='-m32',
-#        CPPPATH = 'include',
-        )
-
 
 # Create a local configuration context; we will
 # close it before the end of this script.
 conf = local.Configure(config_h = 'config.h', help = False)
 
-conf.Define('HOST_OS_IS_UNIX', 1, 'Set for compilation to large targets.')
-conf.Define('STDC_HEADERS', 1, "We have standard C.")
+print(local["PLATFORM"])
+
+if local["PLATFORM"] == "darwin":
+        conf.Define("HOST_IS_DARWIN", 1, "Set for Mac targets")
+        conf.Define("__STDC__", 1, "We have standard C.")
+        conf.Define('STDC_HEADERS', 1, "We have standard C.")
+else:
+        conf.Define("__STDC__", 1, "We have standard C.")
+        conf.Define('HOST_OS_IS_UNIX', 1, 'Set for compilation to large targets.')
+        conf.Define('STDC_HEADERS', 1, "We have standard C.")
+
 conf.Define('TARGET_OS_IS_UNIX', 
         1, 'Set if compiling ilibr & tcofflib under a UNIX.')
 conf.Define('COMPILER_IS_GCC', 
