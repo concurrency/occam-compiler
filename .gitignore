@@ -1,3 +1,6 @@
 .sconsign.dblite
 .sconf_temp
 config.log
+
+occ21/occ21.js
+occ21/occ21.wasm

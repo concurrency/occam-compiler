@@ -1,9 +1,14 @@
 import os
 
 env = Environment(
-  CC        = "clang",
-  CFLAGS    = ["-m32"],
-  LINKFLAGS = ["-m32"]
+#  CC        = "clang",
+  CC="emcc",
+  AR="emar",
+  RANLIB="emranlib",
+  CFLAGS=["-m32"],
+  LINKFLAGS=["-m32", "--emrun"],
+  ENV = {'PATH' : os.environ['PATH']}
+
 )
 
 Export("env")

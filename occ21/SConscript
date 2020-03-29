@@ -158,7 +158,7 @@ stage10 = local.Library(
 # they are defined in. 
 # FIXME: Again, order here probably does not matter, see above
 occ21 = local.Program(
-        target = 'occ21',  
+        target = 'occ21.js',  
         source = [stage01, stage02, stage03, stage04, stage05, stage06,
                   stage07, stage08, stage09, stage10],
         CPPPATH = ['.', 'include'],

@@ -564,7 +564,7 @@ PUBLIC char asmfilename[MAX_FILENAME_LENGTH];
 #endif
 
 arg2_help_page_type help_level = 0;
-arg2_help_page_info oc_help_info;
+arg2_help_page_info oc_help_info2;
 /*}}}*/
 
 /*{{{  extra definitions for COMPILING_TO_JCODE*/
@@ -2357,7 +2357,7 @@ const arg2_descriptor cloptions[] = {
 	{ NULL,       arg2_file_err,  NULL,           file_error,        arg2_help_na,  NULL },
 	{ NULL,       arg2_help,      NULL,           set_help_use,      arg2_help_na,  NULL },
 	{ NULL,       arg2_token,     NULL,           get_source_file,   arg2_help_na,  NULL },
-	{ NULL,       arg2_help_info, &oc_help_info,  NULL,              arg2_help_na,  NULL },
+	{ NULL,       arg2_help_info, &oc_help_info2,  NULL,              arg2_help_na,  NULL },
 	{ NULL,       arg2_tail_line, tail_help_line, NULL,              HELP_USE,      NULL },
 	{ NULL,       arg2_end,       NULL,           finish_command_line_args, arg2_help_na,  NULL },
 	/*}}}*/
