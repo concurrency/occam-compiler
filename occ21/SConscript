@@ -1,12 +1,23 @@
 import os.path
 Import("env")
 
-# local = Environment(
-#         CC = 'clang',
-#         CPPPATH = 'include',
-#         )
+local = Environment()
 
-local = env.Clone()
+local.Replace(ENV = {'PATH' : os.environ['PATH']})
+local.Replace(CFLAGS = ["-m32"])
+print(local["ENV"]["PATH"])
+
+if env.GetOption("use_emscripten"):
+  local.Replace(CC = "emcc")
+  local.Replace(AR = "emar")
+  local.Replace(RANLIB = "emranlib")
+  local.Replace(LINKFLAGS = ["-m32", "--emrun"])
+else:
+  local.Replace(CC = "clang")
+  # local.Replace(AR = "llvm-ranlib-6.0")
+  # local.Replace(RANLIB = "ld.lld")
+  local.Replace(LINKFLAGS = ["-m32"])
+
 
 # Create a local configuration context; we will
 # close it before the end of this script.
@@ -97,6 +108,7 @@ be_srcs = Files('''
         gen4.c gen5.c gen7.c gen8.c gen9.c gen10.c gen11.c gen12.c
         gen13.c generror.c objwrt.c profile.c code1k.c
         ''', path='be')
+        
 stage02 = local.Library(
         'be/be', 
         be_srcs,

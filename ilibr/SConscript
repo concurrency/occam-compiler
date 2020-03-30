@@ -1,22 +1,30 @@
 import os.path
 Import("env")
 
-# local = Environment(
-#         CC = 'clang',
-#         CCFLAGS='-m32',
-#         LINKFLAGS='-m32',
-#         )
-#        LDMODULE = 'lld',
-#        RANLIB = 'llvm-ranlib-6.0',
-#        AR = 'llvm-ar-6.0',
+local = Environment()
 
-local = env.Clone()
+print(env.GetOption("use_emscripten"))
+
+local.Replace(ENV = {'PATH' : os.environ['PATH']})
+local.Replace(CFLAGS = ["-m32"])
+print(local["ENV"]["PATH"])
+
+if env.GetOption("use_emscripten"):
+  local.Replace(CC = "emcc")
+  local.Replace(AR = "emar")
+  local.Replace(RANLIB = "emranlib")
+  local.Replace(LINKFLAGS = ["-m32", "--emrun"])
+else:
+  local.Replace(CC = "clang")
+  # local.Replace(AR = "llvm-ranlib-6.0")
+  # local.Replace(RANLIB = "ld.lld")
+  local.Replace(LINKFLAGS = ["-m32"])
 
 # Create a local configuration context; we will
 # close it before the end of this script.
 conf = local.Configure(config_h = 'config.h', help = False)
 
-print("PLATFORM: ", local["PLATFORM"])
+# print("PLATFORM: ", local["PLATFORM"])
 
 if local["PLATFORM"] == "darwin":
         conf.Define("HOST_IS_DARWIN", 1, "Set for Mac targets")
