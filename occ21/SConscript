@@ -7,7 +7,7 @@ local.Replace(ENV = {'PATH' : os.environ['PATH']})
 local.Replace(CFLAGS = ["-m32"])
 print(local["ENV"]["PATH"])
 
-if env.GetOption("use_emscripten"):
+if env["ENV"]["USE_EMSCRIPTEN"]:
   local.Replace(CC = "emcc")
   local.Replace(AR = "emar")
   local.Replace(RANLIB = "emranlib")
